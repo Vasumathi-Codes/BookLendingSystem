@@ -15,12 +15,20 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Soft delete filters (exclude IsDeleted = true)
+        modelBuilder.Entity<User>().HasQueryFilter(e => !e.IsDeleted);
+        modelBuilder.Entity<Book>().HasQueryFilter(e => !e.IsDeleted);
+        modelBuilder.Entity<LendingRecord>().HasQueryFilter(e => !e.IsDeleted);
+
+        // Required role for User
         modelBuilder.Entity<User>()
             .Property(u => u.Role)
             .IsRequired();
 
+        // Unique constraint on ISBN
         modelBuilder.Entity<Book>()
             .HasIndex(b => b.ISBN)
             .IsUnique();
     }
+
 }

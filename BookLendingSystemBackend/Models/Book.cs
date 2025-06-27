@@ -1,6 +1,6 @@
 namespace BookLendingSystem.Models;
 
-public class Book
+public class Book:BaseEntity
 {
     public int Id { get; set; }
 
