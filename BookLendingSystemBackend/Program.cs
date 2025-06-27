@@ -35,6 +35,7 @@ builder.Services.AddTransient<ILendingRecordService, LendingRecordService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 #endregion
 
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,6 +43,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 #region middlewares
+app.UseMiddleware<RoleInjectionMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 #endregion
 

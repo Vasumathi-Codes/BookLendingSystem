@@ -1,6 +1,7 @@
 using BookLendingSystem.DTOs;
 using BookLendingSystem.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookLendingSystem.Controllers
 {
@@ -16,6 +17,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(IEnumerable<UserReadDto>), 200)]
         public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
         {
@@ -24,6 +26,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(typeof(UserReadDto), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<UserReadDto>> GetUser(int id)
@@ -45,6 +48,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles = "User,Admin")]
         [ProducesResponseType(typeof(UserReadDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -58,6 +62,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(UserReadDto), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<UserReadDto>> DeleteUser(int id)

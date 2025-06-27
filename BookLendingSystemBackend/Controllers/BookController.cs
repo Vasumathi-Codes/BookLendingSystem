@@ -2,6 +2,7 @@ using BookLendingSystem.DTOs;
 using BookLendingSystem.Interfaces;
 using BookLendingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookLendingSystem.Controllers
 {
@@ -34,6 +35,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(BookReadDto), 201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<BookReadDto>> CreateBook([FromBody] BookCreateDto createDto)
@@ -43,6 +45,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(BookReadDto), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -53,6 +56,7 @@ namespace BookLendingSystem.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(BookReadDto), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<BookReadDto>> DeleteBook(int id)
