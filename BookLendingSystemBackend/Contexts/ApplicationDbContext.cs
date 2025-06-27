@@ -29,6 +29,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Book>()
             .HasIndex(b => b.ISBN)
             .IsUnique();
+
+        modelBuilder.Entity<LendingRecord>()
+            .HasIndex(lr => new { lr.UserId, lr.BookId, lr.ReturnDate })
+            .IsUnique()
+            .HasFilter("\"ReturnDate\" IS NULL"); 
+
+
     }
 
 }
