@@ -25,6 +25,11 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Role)
             .IsRequired();
 
+        // Unique username
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Name)
+            .IsUnique();
+
         // Unique constraint on ISBN
         modelBuilder.Entity<Book>()
             .HasIndex(b => b.ISBN)

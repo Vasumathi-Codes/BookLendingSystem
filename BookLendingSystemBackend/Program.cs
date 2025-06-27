@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.WebHost.UseUrls("http://localhost:5000");
+
 #region logger
 builder.Logging.ClearProviders();
 builder.Logging.AddLog4Net("log4net.config");
@@ -25,6 +27,7 @@ builder.Services.AddTransient<IRepository<int, LendingRecord>, LendingRecordRepo
 
 #region services
 builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IUserService, UserService>();
 #endregion
 
 #region Mapper

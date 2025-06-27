@@ -18,6 +18,14 @@ namespace BookLendingSystem.Mappers
             // BookUpdateDto -> Book
             CreateMap<BookUpdateDto, Book>()
                 .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            // UserCreateDto  -> User
+            CreateMap<UserCreateDto, User>(); 
+
+            // User  -> UserCreateDto     
+            CreateMap<User, UserReadDto>();
+
+            CreateMap<UserUpdateDto, User>();
         }
     }
 }

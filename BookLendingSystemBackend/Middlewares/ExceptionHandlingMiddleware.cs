@@ -69,6 +69,7 @@ namespace BookLendingSystem.Middlewares
             {
                 case BookNotFoundException:
                 case UserNotFoundException:
+                case DuplicateUsernameException:
                     statusCode = HttpStatusCode.NotFound;
                     message = exception.Message;
                     break;
