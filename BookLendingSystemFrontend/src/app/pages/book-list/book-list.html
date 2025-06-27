@@ -1,0 +1,196 @@
+<!-- Blurred background wrapper -->
+<div [class.blur-sm]="addBookModalOpen || editBookModalOpen" class="min-h-screen bg-[#F0F4FF] p-4 sm:p-6 transition-all duration-300">
+  <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 border border-[#D9E2FF] relative">
+    <!-- Header + Add Button -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold text-[#0E1B4D]">All Books</h2>
+      <button
+        *ngIf="isAdmin"
+        (click)="openAddBookModal()"
+        class="bg-[#0E1B4D] text-white px-4 sm:px-5 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto"
+      >
+        + Add Book
+      </button>
+    </div>
+
+    <!-- Filter / Search / Sort -->
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center w-full">
+        <input
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="applyFilters()"
+          placeholder="Search by title or author"
+          class="flex-1 px-4 py-2 border border-[#CED4F2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+        />
+        <select
+          [(ngModel)]="selectedSort"
+          (change)="applyFilters()"
+          class="px-4 py-2 border border-[#CED4F2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+        >
+          <option value="">Sort By</option>
+          <option value="title">Title</option>
+          <option value="author">Author</option>
+          <option value="availableCopies">Available Copies</option>
+        </select>
+        <select
+          [(ngModel)]="availabilityFilter"
+          (change)="applyFilters()"
+          class="px-4 py-2 border border-[#CED4F2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+        >
+          <option value="">All</option>
+          <option value="available">Available Only</option>
+          <option value="unavailable">Unavailable Only</option>
+        </select>
+      </div>
+      <select
+        [(ngModel)]="pageSize"
+        (change)="changePageSize()"
+        class="w-full sm:w-auto px-4 py-2 border border-[#CED4F2] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+      >
+        <option [value]="3">3 / page</option>
+        <option [value]="6">6 / page</option>
+        <option [value]="12">12 / page</option>
+      </select>
+    </div>
+
+    <!-- Book Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      <div *ngFor="let book of pagedBooks" class="bg-[#F8FAFF] shadow-md rounded-xl p-5 border border-[#CED4F2]">
+        <h3 class="text-lg sm:text-xl font-semibold text-[#0E1B4D] mb-2">{{ book.title }}</h3>
+        <p class="text-gray-700 mb-1"><strong>Author:</strong> {{ book.author }}</p>
+        <p class="text-gray-600 text-sm mb-1"><strong>ISBN:</strong> {{ book.isbn }}</p>
+        <p class="text-sm text-gray-500 mb-2">
+          <strong>Available:</strong> {{ book.availableCopies }}/{{ book.totalCopies }}
+        </p>
+        <p class="text-sm text-gray-600 mb-3">{{ book.description }}</p>
+        <div *ngIf="isAdmin" class="flex flex-col sm:flex-row gap-2 justify-between">
+          <button (click)="openEditBookModal(book)" class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto">
+            Edit
+          </button>
+          <button (click)="deleteBook(book.id)" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full sm:w-auto">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button
+        (click)="prevPage()"
+        [disabled]="page === 1"
+        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
+      >
+        Previous
+      </button>
+      <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="page === totalPages"
+        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Book Modal -->
+<div *ngIf="addBookModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-xl">
+    <h3 class="text-xl sm:text-2xl font-bold text-[#0E1B4D] mb-4">Add New Book</h3>
+    <form (ngSubmit)="addBook()" #bookForm="ngForm" class="space-y-4">
+      <input
+        type="text"
+        [(ngModel)]="newBook.title"
+        name="title"
+        required
+        placeholder="Title"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="bookForm.submitted && !newBook.title" class="text-red-600 text-sm">Title is required</div>
+
+      <input
+        type="text"
+        [(ngModel)]="newBook.author"
+        name="author"
+        required
+        placeholder="Author"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="bookForm.submitted && !newBook.author" class="text-red-600 text-sm">Author is required</div>
+
+      <input
+        type="text"
+        [(ngModel)]="newBook.isbn"
+        name="isbn"
+        required
+        placeholder="ISBN"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="bookForm.submitted && !newBook.isbn" class="text-red-600 text-sm">ISBN is required</div>
+
+      <input
+        type="number"
+        [(ngModel)]="newBook.totalCopies"
+        name="totalCopies"
+        min="1"
+        required
+        placeholder="Total Copies"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="bookForm.submitted && newBook.totalCopies < 1" class="text-red-600 text-sm">Must be ≥ 1 copy</div>
+
+      <textarea
+        [(ngModel)]="newBook.description"
+        name="description"
+        rows="3"
+        placeholder="Short description"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      ></textarea>
+      <div *ngIf="bookForm.submitted && !newBook.description" class="text-red-600 text-sm">Description is required</div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button type="button" (click)="closeAddBookModal()" class="px-4 py-2 border border-gray-400 rounded w-full sm:w-auto">Cancel</button>
+        <button type="submit" class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto">Add Book</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Book Modal -->
+<div *ngIf="editBookModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-xl">
+    <h3 class="text-xl sm:text-2xl font-bold text-[#0E1B4D] mb-4">Edit Book</h3>
+    <form (ngSubmit)="updateBook()" #editForm="ngForm" class="space-y-4">
+      <input [value]="selectedBookToEdit?.title" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100"/>
+      <input [value]="selectedBookToEdit?.author" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100"/>
+      <input [value]="selectedBookToEdit?.isbn" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100"/>
+
+      <input
+        type="number"
+        [(ngModel)]="editBookForm.totalCopies"
+        name="totalCopies"
+        min="1"
+        required
+        placeholder="Total Copies"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="editForm.submitted && editBookForm?.totalCopies! < 1" class="text-red-600 text-sm">Count must be ≥ 1</div>
+
+      <textarea
+        [(ngModel)]="editBookForm.description"
+        name="description"
+        rows="3"
+        placeholder="Update description"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      ></textarea>
+      <div *ngIf="editForm.submitted && !editBookForm.description" class="text-red-600 text-sm">Description is required</div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button type="button" (click)="closeEditBookModal()" class="px-4 py-2 border border-gray-400 rounded w-full sm:w-auto">Cancel</button>
+        <button type="submit" class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto">Update Book</button>
+      </div>
+    </form>
+  </div>
+</div>
