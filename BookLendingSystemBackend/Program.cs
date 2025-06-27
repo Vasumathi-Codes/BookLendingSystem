@@ -28,6 +28,7 @@ builder.Services.AddTransient<IRepository<int, LendingRecord>, LendingRecordRepo
 #region services
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ILendingRecordService, LendingRecordService>();
 #endregion
 
 #region Mapper

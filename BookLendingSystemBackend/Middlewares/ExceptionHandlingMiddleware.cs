@@ -70,14 +70,19 @@ namespace BookLendingSystem.Middlewares
                 case BookNotFoundException:
                 case UserNotFoundException:
                 case DuplicateUsernameException:
+                case LendingRecordNotFoundException:
                     statusCode = HttpStatusCode.NotFound;
                     message = exception.Message;
                     break;
 
+                case BookUnavailableException:
                 case BookAlreadyBorrowedException:
+                case NoAvailableCopiesException:
+                case DuplicateBorrowingException:
                     statusCode = HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;
+
             }
 
             context.Response.ContentType = "application/json";
