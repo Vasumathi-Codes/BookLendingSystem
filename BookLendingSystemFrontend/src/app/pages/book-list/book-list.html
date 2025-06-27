@@ -1,5 +1,9 @@
 <!-- Blurred background wrapper -->
-<div [class.blur-sm]="addBookModalOpen || editBookModalOpen" class="min-h-screen bg-[#F0F4FF] p-4 sm:p-6 transition-all duration-300">
+<div
+  [class.blur-sm]="addBookModalOpen || editBookModalOpen || borrowModalOpen"
+  class="min-h-screen bg-[#F0F4FF] p-4 sm:p-6 transition-all duration-300"
+>
+
   <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 border border-[#D9E2FF] relative">
     <!-- Header + Add Button -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
@@ -53,26 +57,47 @@
       </select>
     </div>
 
-    <!-- Book Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      <div *ngFor="let book of pagedBooks" class="bg-[#F8FAFF] shadow-md rounded-xl p-5 border border-[#CED4F2]">
-        <h3 class="text-lg sm:text-xl font-semibold text-[#0E1B4D] mb-2">{{ book.title }}</h3>
-        <p class="text-gray-700 mb-1"><strong>Author:</strong> {{ book.author }}</p>
-        <p class="text-gray-600 text-sm mb-1"><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <!-- Book Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let book of pagedBooks"
+        class="bg-[#F8FAFF] border border-[#CED4F2] rounded-xl p-5 shadow min-h-[250px] flex flex-col justify-between">
+
+        <!-- Book Info -->
+        <div>
+        <h3 class="text-xl font-semibold text-[#0E1B4D] mb-2">{{ book.title }}</h3>
+        <p class="text-gray-700"><strong>Author:</strong> {{ book.author }}</p>
+        <p class="text-sm text-gray-600"><strong>ISBN:</strong> {{ book.isbn }}</p>
         <p class="text-sm text-gray-500 mb-2">
-          <strong>Available:</strong> {{ book.availableCopies }}/{{ book.totalCopies }}
+            <strong>Available:</strong> {{ book.availableCopies }}/{{ book.totalCopies }}
         </p>
-        <p class="text-sm text-gray-600 mb-3">{{ book.description }}</p>
-        <div *ngIf="isAdmin" class="flex flex-col sm:flex-row gap-2 justify-between">
-          <button (click)="openEditBookModal(book)" class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto">
-            Edit
-          </button>
-          <button (click)="deleteBook(book.id)" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full sm:w-auto">
-            Delete
-          </button>
+        <p class="text-sm text-gray-600">{{ book.description }}</p>
         </div>
-      </div>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+        <div *ngIf="isAdmin" class="flex flex-col sm:flex-row gap-3">
+            <button (click)="openEditBookModal(book)"
+                    class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#1c2a6e] w-full sm:w-auto">
+            Edit
+            </button>
+            <button (click)="deleteBook(book.id)"
+                    class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full sm:w-auto">
+            Delete
+            </button>
+        </div>
+
+        <div *ngIf="!isAdmin" class="mt-2">
+            <button (click)="openBorrowModal(book)"
+                    [disabled]="book.availableCopies === 0"
+                    class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50">
+            {{ book.availableCopies === 0 ? 'Not Available' : 'Borrow Book' }}
+            </button>
+        </div>
+        </div>
     </div>
+    </div>
+
+
 
     <!-- Pagination Controls -->
     <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -194,3 +219,35 @@
     </form>
   </div>
 </div>
+
+<!-- Borrow Modal -->
+<div *ngIf="borrowModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg">
+    <h3 class="text-xl sm:text-2xl font-bold text-[#0E1B4D] mb-4">Borrow Book</h3>
+    <form (ngSubmit)="confirmBorrow()" #borrowForm="ngForm" class="space-y-4">
+      <p class="text-[#0E1B4D] font-medium mb-2">
+        <strong>Book:</strong> {{ selectedBookToBorrow?.title }}
+      </p>
+
+      <input
+        type="number"
+        [(ngModel)]="borrowDays"
+        name="borrowDays"
+        min="1"
+        max="30"
+        required
+        placeholder="Days to borrow (1-30)"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="borrowForm.submitted && (borrowDays < 1 || borrowDays > 30)" class="text-red-600 text-sm">
+        Days must be between 1 and 30
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button type="button" (click)="closeBorrowModal()" class="px-4 py-2 border border-gray-400 rounded w-full sm:w-auto">Cancel</button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full sm:w-auto">Confirm Borrow</button>
+      </div>
+    </form>
+  </div>
+</div>
+

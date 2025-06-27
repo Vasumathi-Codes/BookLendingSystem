@@ -35,6 +35,7 @@ export class Login {
 
           localStorage.setItem('username', res.name);
           localStorage.setItem('role', res.role);
+          localStorage.setItem('id', res.id.toString());
 
           setTimeout(() => {
             this.router.navigate([`/${res.role.toLowerCase()}`]);

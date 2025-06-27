@@ -5,6 +5,7 @@ import { BookService } from '../../services/book.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RoleService } from '../../services/role.service';
+import { LendingRecordService } from '../../services/lending-record.service'; 
 
 @Component({
   standalone: true,
@@ -41,8 +42,14 @@ export class BookList implements OnInit {
     description: ''
   };
 
+  // Borrow Modal
+  borrowModalOpen = false;
+  selectedBookToBorrow: BookReadDto | null = null;
+  borrowDays: number = 7;
+
   constructor(
     private bookService: BookService,
+    private lendingRecordService: LendingRecordService, 
     private toastr: ToastrService,
     private roleService: RoleService
   ) {}
@@ -198,8 +205,45 @@ export class BookList implements OnInit {
         this.closeEditBookModal();
         this.fetchBooks();
       },
-      error: () => {
-        this.toastr.error('Failed to update book');
+      error: (err) => {
+        this.toastr.error(err?.error?.error|| 'Failed to update book');
+      }
+    });
+  }
+
+  // BORROW Modal Logic
+  openBorrowModal(book: BookReadDto) {
+    this.selectedBookToBorrow = book;
+    this.borrowDays = 7;
+    this.borrowModalOpen = true;
+  }
+
+  closeBorrowModal() {
+    this.selectedBookToBorrow = null;
+    this.borrowModalOpen = false;
+    this.borrowDays = 7;
+  }
+
+  confirmBorrow() {
+    if (!this.selectedBookToBorrow || this.borrowDays < 1 || this.borrowDays > 30) {
+      this.toastr.error('Borrowing days must be between 1 and 30');
+      return;
+    }
+
+    const borrowDto = {
+      userId: this.roleService.getUserId(), 
+      bookId: this.selectedBookToBorrow.id,
+      daysToBorrow: this.borrowDays
+    };
+
+    this.lendingRecordService.borrowBook(borrowDto).subscribe({
+      next: () => {
+        this.toastr.success('Book borrowed successfully');
+        this.closeBorrowModal();
+        this.fetchBooks();
+      },
+      error: (err) => {
+        this.toastr.error(err?.error?.error|| 'Failed to borrow book');
       }
     });
   }
