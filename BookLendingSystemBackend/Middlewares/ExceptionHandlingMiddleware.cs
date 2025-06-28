@@ -79,6 +79,7 @@ namespace BookLendingSystem.Middlewares
                 case BookAlreadyBorrowedException:
                 case NoAvailableCopiesException:
                 case DuplicateBorrowingException:
+                case InvalidOperationException:
                     statusCode = HttpStatusCode.BadRequest;
                     message = exception.Message;
                     break;

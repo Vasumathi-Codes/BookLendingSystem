@@ -17,7 +17,6 @@ namespace BookLendingSystem.Controllers
             _lendingService = lendingService;
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost("borrowbook")]
         public async Task<ActionResult<LendingRecordReadDto>> BorrowBook([FromBody] LendingRecordCreateDto dto)
         {
@@ -25,7 +24,6 @@ namespace BookLendingSystem.Controllers
             return CreatedAtAction(nameof(GetUserBorrowedBooks), new { userId = dto.UserId }, record);
         }
 
-        [Authorize(Roles = "User")]
         [HttpPut("returnbook")]
         public async Task<ActionResult<LendingRecordReadDto>> ReturnBook([FromQuery] int userId, [FromQuery] int bookId)
         {
@@ -33,7 +31,6 @@ namespace BookLendingSystem.Controllers
             return Ok(record);
         }
 
-        [Authorize(Roles = "User,Admin")]
         [HttpGet("user/borrowed")]
         public async Task<ActionResult<PagedResult<LendingRecordReadDto>>> GetUserBorrowedBooks([FromQuery] LendingRecordQueryDto dto)
         {
@@ -41,7 +38,6 @@ namespace BookLendingSystem.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("overdue")]
         public async Task<ActionResult<PagedResult<LendingRecordReadDto>>> GetOverdueBooks([FromQuery] LendingRecordQueryDto dto)
         {
@@ -49,7 +45,6 @@ namespace BookLendingSystem.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("history")]
         public async Task<ActionResult<PagedResult<LendingRecordReadDto>>> GetAllLendingHistory([FromQuery] LendingRecordQueryDto dto)
         {
