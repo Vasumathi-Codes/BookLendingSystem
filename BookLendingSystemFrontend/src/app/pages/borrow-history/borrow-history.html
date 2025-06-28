@@ -52,8 +52,16 @@
     </div>
 
     <!-- Record Cards -->
-    <div *ngFor="let record of pagedRecords" class="bg-[#F8FAFF] rounded-xl p-5 mb-4 border border-[#CED4F2] shadow">
-      <div class="flex flex-col sm:flex-row justify-between gap-3">
+    <div
+        *ngFor="let record of pagedRecords"
+        class="rounded-xl p-5 mb-4 border shadow"
+        [ngClass]="{
+            'bg-[#FFF5F5] border-red-300': record.status === 'Overdue',
+            'bg-[#F8FAFF] border-[#CED4F2]': record.status !== 'Overdue'
+        }"
+        >
+
+        <div class="flex flex-col sm:flex-row justify-between gap-3">
         <div>
           <h3 class="text-xl font-semibold text-[#0E1B4D]">{{ record.bookTitle }}</h3>
           <p class="text-sm text-gray-600">
@@ -92,24 +100,34 @@
         </div>
       </div>
     </div>
+    <!-- No records found -->
+    <div *ngIf="pagedRecords.length === 0" class="text-center py-10">
+        <img
+            src="https://hellomentor.in/_next/image?url=%2Fgif%2Fnodatafound.gif&w=750&q=75"
+            alt="No records found"
+            class="mx-auto w-64 h-auto mb-4"
+        />
+        <p class="text-gray-500 text-lg font-medium">No records found.</p>
+    </div>
+
 
     <!-- Pagination -->
-    <div class="flex justify-center items-center gap-4 mt-6">
-      <button
-        (click)="prevPage()"
-        [disabled]="page === 1"
-        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
-      >
-        Previous
-      </button>
-      <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
-      <button
-        (click)="nextPage()"
-        [disabled]="page === totalPages"
-        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
-      >
-        Next
-      </button>
+    <div *ngIf="pagedRecords.length > 0" class="flex justify-center items-center gap-4 mt-6">
+        <button
+            (click)="prevPage()"
+            [disabled]="page === 1"
+            class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
+        >
+            Previous
+        </button>
+        <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
+        <button
+            (click)="nextPage()"
+            [disabled]="page === totalPages"
+            class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
+        >
+            Next
+        </button>
     </div>
   </div>
 </div>

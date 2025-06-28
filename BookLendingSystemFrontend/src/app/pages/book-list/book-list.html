@@ -96,27 +96,37 @@
         </div>
     </div>
     </div>
-
+    <!-- No Books Found -->
+    <div *ngIf="pagedBooks.length === 0" class="text-center py-10">
+        <img
+            src="https://hellomentor.in/_next/image?url=%2Fgif%2Fnodatafound.gif&w=750&q=75"
+            alt="No books found"
+            class="mx-auto w-64 h-auto mb-4"
+        />
+        <p class="text-gray-500 text-lg font-medium">No books found.</p>
+    </div>
 
 
     <!-- Pagination Controls -->
-    <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <button
-        (click)="prevPage()"
-        [disabled]="page === 1"
-        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
-      >
-        Previous
-      </button>
-      <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
-      <button
-        (click)="nextPage()"
-        [disabled]="page === totalPages"
-        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
-      >
-        Next
-      </button>
+    <!-- Pagination Controls -->
+    <div *ngIf="pagedBooks.length > 0" class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button
+            (click)="prevPage()"
+            [disabled]="page === 1"
+            class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
+        >
+            Previous
+        </button>
+        <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
+        <button
+            (click)="nextPage()"
+            [disabled]="page === totalPages"
+            class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400 w-full sm:w-auto"
+        >
+            Next
+        </button>
     </div>
+
   </div>
 </div>
 
