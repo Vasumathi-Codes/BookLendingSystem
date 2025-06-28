@@ -38,7 +38,7 @@ export class Login {
           localStorage.setItem('id', res.id.toString());
 
           setTimeout(() => {
-            this.router.navigate([`/${res.role.toLowerCase()}`]);
+            this.router.navigate([`/${res.role.toLowerCase()}-dashboard`]);
           }, 1500);
         },
         error: (err) => {

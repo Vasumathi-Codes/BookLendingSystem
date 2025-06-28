@@ -60,10 +60,10 @@
     <!-- Book Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <div *ngFor="let book of pagedBooks"
-        class="bg-[#F8FAFF] border border-[#CED4F2] rounded-xl p-5 shadow min-h-[250px] flex flex-col justify-between">
+     class="bg-[#F8FAFF] border border-[#CED4F2] rounded-xl p-5 shadow h-full flex flex-col justify-between transition-all hover:shadow-lg hover:-translate-y-1 duration-200">
 
         <!-- Book Info -->
-        <div>
+        <div [routerLink]="['/book-detail', book.id]">
         <h3 class="text-xl font-semibold text-[#0E1B4D] mb-2">{{ book.title }}</h3>
         <p class="text-gray-700"><strong>Author:</strong> {{ book.author }}</p>
         <p class="text-sm text-gray-600"><strong>ISBN:</strong> {{ book.isbn }}</p>

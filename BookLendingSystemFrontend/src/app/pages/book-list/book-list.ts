@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RoleService } from '../../services/role.service';
 import { LendingRecordService } from '../../services/lending-record.service'; 
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-book-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './book-list.html',
 })
 export class BookList implements OnInit {

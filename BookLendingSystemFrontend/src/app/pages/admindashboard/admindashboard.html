@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-[#F0F4FF] p-6">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-4xl font-bold text-[#0E1B4D] mb-8">📊 Admin Dashboard</h2>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      <!-- Total Books -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-book fa-2x text-[#1A237E]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Total Books</p>
+            <h3 class="text-2xl font-semibold text-[#0E1B4D]">{{ totalBooks }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Books -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-check-circle fa-2x text-[#2E7D32]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Available Books</p>
+            <h3 class="text-2xl font-semibold text-[#2E7D32]">{{ availableBooks }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Borrowed Books -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-book-reader fa-2x text-[#0277BD]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Borrowed Books</p>
+            <h3 class="text-2xl font-semibold text-[#0277BD]">{{ totalBorrowRecords }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Returned -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-undo-alt fa-2x text-[#00796B]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Returned</p>
+            <h3 class="text-2xl font-semibold text-[#00796B]">{{ returnedCount }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Not Returned -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-clock fa-2x text-[#F9A825]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Not Returned</p>
+            <h3 class="text-2xl font-semibold text-[#F9A825]">{{ notReturnedCount }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overdue -->
+      <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF] hover:shadow-lg transition">
+        <div class="flex items-center gap-4">
+          <i class="fas fa-exclamation-circle fa-2x text-[#C62828]"></i>
+          <div>
+            <p class="text-sm text-gray-500">Overdue Books</p>
+            <h3 class="text-2xl font-semibold text-[#C62828]">{{ overdueCount }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-[#D9E2FF]">
+      <h3 class="text-xl font-semibold text-[#0E1B4D] mb-4"><i class="fas fa-link mr-2"></i>Quick Links</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a
+          routerLink="/book-list"
+          class="flex items-center justify-center gap-3 p-4 bg-[#E3F2FD] text-[#0D47A1] rounded-lg font-medium shadow hover:bg-[#BBDEFB] transition"
+        >
+          <i class="fas fa-book-open"></i> View Book List
+        </a>
+        <a
+          routerLink="/borrow-list"
+          class="flex items-center justify-center gap-3 p-4 bg-[#FFF3E0] text-[#E65100] rounded-lg font-medium shadow hover:bg-[#FFE0B2] transition"
+        >
+          <i class="fas fa-history"></i> View Borrow History
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

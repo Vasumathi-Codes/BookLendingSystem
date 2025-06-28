@@ -1,0 +1,132 @@
+<div class="max-w-3xl mx-auto bg-white rounded-xl shadow p-6 mt-6">
+  <!-- Book Image and Info Grid -->
+  <div class="flex flex-col sm:flex-row gap-6 mb-6">
+    <!-- Dummy Image -->
+    <div class="flex-shrink-0 w-full sm:w-48 h-64 bg-gray-100 rounded overflow-hidden">
+      <img
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0jWcj0m4uCpUqpoVbFUz05m9Vj5qeTg_p4w&s"
+        alt="Book Cover"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <!-- Book Info -->
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold mb-4">{{ book.title }}</h2>
+      <p class="text-gray-700 mb-2"><strong>Author:</strong> {{ book.author }}</p>
+      <p class="text-gray-700 mb-2"><strong>ISBN:</strong> {{ book.isbn }}</p>
+      <p class="text-gray-700 mb-2"><strong>Total Copies:</strong> {{ book.totalCopies }}</p>
+      <p class="text-gray-700 mb-2"><strong>Available Copies:</strong> {{ book.availableCopies }}</p>
+      <p class="text-gray-700 mb-4"><strong>Description:</strong><br />{{ book.description }}</p>
+
+      <!-- Admin Actions -->
+      <div *ngIf="isAdmin" class="mt-4 flex gap-3">
+        <button
+          (click)="openEditModal()"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Edit Book
+        </button>
+        <button
+          (click)="deleteBook()"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          Delete Book
+        </button>
+      </div>
+
+      <!-- User Borrow Button -->
+      <div *ngIf="!isAdmin" class="mt-4">
+        <button
+          class="bg-[#0E1B4D] text-white px-4 py-2 rounded hover:bg-[#2D3A73]"
+          [disabled]="book.availableCopies === 0 || hasBorrowed"
+          (click)="openBorrowModal()"
+        >
+          Borrow Book
+        </button>
+
+        <p *ngIf="book.availableCopies === 0" class="text-red-600 mt-2">No copies available.</p>
+        <p *ngIf="hasBorrowed" class="text-yellow-600 mt-2">You've already borrowed this book.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Borrow Modal -->
+<div *ngIf="borrowModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg">
+    <h3 class="text-xl sm:text-2xl font-bold text-[#0E1B4D] mb-4">Borrow Book</h3>
+    <form (ngSubmit)="borrowBook()" #borrowForm="ngForm" class="space-y-4">
+      <p class="text-[#0E1B4D] font-medium mb-2">
+        <strong>Book:</strong> {{ book.title }}
+      </p>
+
+      <label for="borrowDays" class="block text-sm font-medium text-gray-700">Days to Borrow (1–30):</label>
+      <input
+        type="number"
+        [(ngModel)]="borrowDays"
+        name="borrowDays"
+        id="borrowDays"
+        min="1"
+        max="30"
+        required
+        placeholder="Enter number of days"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="borrowForm.submitted && (borrowDays < 1 || borrowDays > 30)" class="text-red-600 text-sm">
+        Days must be between 1 and 30
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button type="button" (click)="closeBorrowModal()" class="px-4 py-2 border border-gray-400 rounded w-full sm:w-auto">
+          Cancel
+        </button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full sm:w-auto">
+          Confirm Borrow
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div *ngIf="editModalOpen" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-xl">
+    <h3 class="text-xl sm:text-2xl font-bold text-[#0E1B4D] mb-4">Edit Book</h3>
+    <form (ngSubmit)="updateBook()" #editForm="ngForm" class="space-y-4">
+      <input [value]="book.title" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100" />
+      <input [value]="book.author" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100" />
+      <input [value]="book.isbn" disabled class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg bg-gray-100" />
+
+      <input
+        type="number"
+        [(ngModel)]="editBookForm.totalCopies"
+        name="totalCopies"
+        min="1"
+        required
+        placeholder="Total Copies"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      />
+      <div *ngIf="editForm.submitted && editBookForm?.totalCopies! < 1" class="text-red-600 text-sm">Must be ≥ 1</div>
+
+      <textarea
+        [(ngModel)]="editBookForm.description"
+        name="description"
+        rows="3"
+        required
+        placeholder="Description"
+        class="w-full px-4 py-2 border border-[#CED4F2] rounded-lg"
+      ></textarea>
+      <div *ngIf="editForm.submitted && !editBookForm.description" class="text-red-600 text-sm">Description is required</div>
+
+      <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+        <button type="button" (click)="closeEditModal()" class="px-4 py-2 border border-gray-400 rounded w-full sm:w-auto">
+          Cancel
+        </button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto">
+          Update Book
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
