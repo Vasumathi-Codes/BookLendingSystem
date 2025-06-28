@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { RoleService } from '../../../services/role.service';
 
 @Component({
   standalone: true,
@@ -18,7 +19,8 @@ export class Login {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private roleService: RoleService
   ) {
     this.loginForm = this.fb.group({
       name: ['', Validators.required],
@@ -32,14 +34,14 @@ export class Login {
         next: (res) => {
           this.toastr.success('Login successful!');
           this.auth.setHeaders(res);
-
+          this.roleService.setRole(res.role, res.name, res.id);
           localStorage.setItem('username', res.name);
           localStorage.setItem('role', res.role);
           localStorage.setItem('id', res.id.toString());
 
           setTimeout(() => {
             this.router.navigate([`/${res.role.toLowerCase()}-dashboard`]);
-          }, 1500);
+          }, 500);
         },
         error: (err) => {
           this.toastr.error(err?.error?.error || 'Login failed. Try again.');
