@@ -1,6 +1,23 @@
 <div class="min-h-screen bg-[#F0F4FF] p-4 sm:p-6">
   <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-[#D9E2FF]">
-    <h2 class="text-2xl font-bold text-[#0E1B4D] mb-6">Borrow History</h2>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h2 class="text-2xl font-bold text-[#0E1B4D]">Borrow History</h2>
+        <div class="flex gap-3">
+            <button
+                (click)="downloadCSV()"
+                class="px-5 py-2 bg-[#D9E2FF] text-[#0E1B4D] font-semibold rounded-lg shadow hover:bg-[#A3B8FF] transition w-full sm:w-auto"
+                >
+                Download CSV
+            </button>
+            <button
+                (click)="downloadPDF()"
+                class="px-5 py-2 bg-[#E0E0E0] text-[#0E1B4D] font-semibold rounded-lg shadow hover:bg-[#BDBDBD] transition w-full sm:w-auto"
+                >
+                Download PDF
+            </button>
+        </div>
+    </div>
+
 
     <!-- Filters -->
     <div class="flex flex-col md:flex-row gap-4 mb-6">
@@ -20,6 +37,7 @@
         <option value="Overdue">Overdue</option>
         <option value="Returned">Returned</option>
       </select>
+      
       <select
         [(ngModel)]="selectedSort"
         (change)="applyFilters()"
@@ -51,6 +69,7 @@
       </select>
     </div>
 
+
     <!-- Record Cards -->
     <div
         *ngFor="let record of pagedRecords"
@@ -79,16 +98,19 @@
         </div>
 
         <div class="flex flex-col items-end gap-2">
-          <span
-            class="text-xs font-semibold px-3 py-1 rounded-full"
-            [ngClass]="{
-              'bg-yellow-100 text-yellow-700': record.status === 'In Progress',
-              'bg-red-100 text-red-700': record.status === 'Overdue',
-              'bg-green-100 text-green-700': record.status === 'Returned'
-            }"
-          >
-            {{ record.status }}
-          </span>
+            <span
+                class="text-xs font-semibold px-3 py-1 rounded-full"
+                [ngClass]="{
+                    'bg-yellow-100 text-yellow-700': record.status === 'In Progress',
+                    'bg-red-100 text-red-700': record.status === 'Overdue',
+                    'bg-green-100 text-green-700': record.status === 'Returned'
+                }"
+                >
+                {{ record.status }}
+                <ng-container *ngIf="record.status === 'Overdue'">
+                    - {{ getOverdueDays(record.dueDate) }} day{{ getOverdueDays(record.dueDate) > 1 ? 's' : '' }}
+                </ng-container>
+            </span>
 
           <button
             *ngIf="(record.status === 'In Progress' || record.status === 'Overdue') && !isAdmin"

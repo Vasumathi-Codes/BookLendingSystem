@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RoleService } from '../../services/role.service';
 import { LendingRecordService } from '../../services/lending-record.service'; 
 import { RouterModule } from '@angular/router';
+import { ExportService } from '../../services/export.service';
 
 @Component({
   standalone: true,
@@ -52,7 +53,8 @@ export class BookList implements OnInit {
     private bookService: BookService,
     private lendingRecordService: LendingRecordService, 
     private toastr: ToastrService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private exportSevice: ExportService
   ) {}
 
   get isAdmin(): boolean {
@@ -247,5 +249,14 @@ export class BookList implements OnInit {
         this.toastr.error(err?.error?.error|| 'Failed to borrow book');
       }
     });
+  }
+
+  downloadCSV() {
+    this.exportSevice.downloadCSV(this.books, 'book-list.csv');
+  }
+
+  downloadPDF() {
+    const columns = ['title', 'author', 'isbn', 'totalCopies', 'availableCopies'];
+    this.exportSevice.downloadPDF(this.books, columns, 'book-list.pdf');
   }
 }

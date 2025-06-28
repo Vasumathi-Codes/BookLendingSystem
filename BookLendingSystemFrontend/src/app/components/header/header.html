@@ -10,31 +10,35 @@
     </div>
 
     <!-- Right: Navigation Buttons -->
-    <nav *ngIf="isLoggedIn" class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
-      <button
-        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium"
+    <nav
+    *ngIf="isLoggedIn"
+    class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center w-full sm:w-auto mt-2 sm:mt-0"
+    >
+    <button
+        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
         (click)="navigateToDashboard()"
-      >
+    >
         Dashboard
-      </button>
-      <button
-        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium"
+    </button>
+    <button
+        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
         (click)="navigateTo('/book-list')"
-      >
+    >
         Book List
-      </button>
-      <button
-        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium"
+    </button>
+    <button
+        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
         (click)="navigateTo('/borrow-list')"
-      >
+    >
         Borrow History
-      </button>
-      <button
-        class="bg-green-500 hover:bg-green-400 px-4 py-2 rounded text-sm font-medium"
+    </button>
+    <button
+        class="bg-green-500 hover:bg-green-400 px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
         (click)="logout()"
-      >
+    >
         Logout
-      </button>
+    </button>
     </nav>
+
   </div>
 </header>

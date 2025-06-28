@@ -5,6 +5,7 @@ import { LendingRecordService } from '../../services/lending-record.service';
 import { LendingRecordReadDto } from '../../models/lending-record.model';
 import { RoleService } from '../../services/role.service';
 import { ToastrService } from 'ngx-toastr';
+import { ExportService } from '../../services/export.service';
 
 type RecordStatus = 'Returned' | 'Overdue' | 'In Progress';
 
@@ -37,7 +38,8 @@ export class BorrowHistory implements OnInit {
   constructor(
     private lendingService: LendingRecordService,
     private roleService: RoleService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private exportSevice: ExportService
   ) {
     this.userId = this.roleService.getUserId();
     this.isAdmin = this.roleService.isAdmin();
@@ -156,6 +158,15 @@ export class BorrowHistory implements OnInit {
     const today = new Date();
     const diff = today.getTime() - due.getTime();
     return Math.ceil(diff / (1000 * 3600 * 24));
+  }
+
+  downloadCSV() {
+    this.exportSevice.downloadCSV(this.filteredRecords, 'borrow-history.csv');
+  }
+
+  downloadPDF() {
+    const columns = ['userName', 'bookTitle', 'borrowDate', 'dueDate', 'returnDate', 'status'];
+    this.exportSevice.downloadPDF(this.filteredRecords, columns, 'borrow-history.pdf');
   }
 
 }

@@ -17,6 +17,22 @@
       </button>
     </div>
 
+    <div class="flex justify-end gap-3 mb-6">
+        <button
+            (click)="downloadCSV()"
+            class="px-5 py-2 bg-[#D9E2FF] text-[#0E1B4D] font-semibold rounded-lg shadow hover:bg-[#A3B8FF] transition"
+        >
+            Download CSV
+        </button>
+        <button
+            (click)="downloadPDF()"
+            class="px-5 py-2 bg-[#E0E0E0] text-[#0E1B4D] font-semibold rounded-lg shadow hover:bg-[#BDBDBD] transition"
+        >
+            Download PDF
+        </button>
+    </div>
+
+
     <!-- Filter / Search / Sort -->
     <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 mb-6">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center w-full">

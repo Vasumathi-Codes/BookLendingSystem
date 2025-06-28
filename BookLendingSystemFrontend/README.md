@@ -1,59 +1,84 @@
-# BookLendingSystemFrontend
+# Book Lending System - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+This is the Angular frontend for the Book Lending System application. The system enables two types of users – Admin and User – to manage book inventory, lending activities, and return tracking.
 
-## Development server
+## Features
 
-To start a local development server, run:
+### User Roles
+- Two roles: Admin and User
+- Role selection is available on login (no authentication implemented)
+- Role-specific access control for features
 
-```bash
-ng serve
-```
+### Admin Functionalities
+- Add new books with:
+  - Title
+  - Author
+  - ISBN
+  - Total copies
+  - Short description
+- Edit existing book details
+- Delete books from the catalog
+- View list of all books along with their availability status
+- View all lending records from all users
+- Export lending records to CSV or PDF
+- Mobile-responsive layout for all views
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### User Functionalities
+- View the list of available books
+- View detailed information about each book
+- Borrow a book (only if copies are available)
+- Return borrowed books
+- View borrowing history with borrow, due, return dates, and status
 
-## Code scaffolding
+### Book Details Page
+- Displays:
+  - Book title
+  - Author
+  - ISBN
+  - Description
+  - Total and available copies
+- Borrow button is disabled if no copies are available
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Borrowing Logic
+- Available copies decrease upon borrowing
+- Available copies increase upon return
+- Prevents users from borrowing the same book twice without returning it
 
-```bash
-ng generate component component-name
-```
+### Overdue Tracking (Challenging Requirement)
+- Borrowed books are assigned a due date
+- Status is calculated based on return status and current date:
+  - In Progress
+  - Returned
+  - Overdue
+- Overdue books display number of days overdue
+- Visual highlight of overdue records with color indication
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Filters and Sorting
+- Filter by:
+  - Book title (search)
+  - Lending status (In Progress, Returned, Overdue)
+- Sort by:
+  - Borrow date
+  - Due date
+  - Status
+- Supports ascending and descending order toggle
+- Pagination with selectable page size (5, 10, 20)
 
-```bash
-ng generate --help
-```
+### Responsive Design
+- Fully responsive layout using Tailwind CSS
+- Download buttons repositioned below headings for mobile view
+- Navbar adapts for mobile screens
 
-## Building
+### Export Features
+- Export borrowing history as CSV
+- Export borrowing history as formatted PDF
+- Export supports filters and pagination context
 
-To build the project run:
+## Technology Stack
 
-```bash
-ng build
-```
+- Angular 20 (standalone components)
+- Tailwind CSS
+- RxJS for data streams
+- ngx-toastr for toast notifications
+- html2pdf and custom CSV service for export functionality
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
