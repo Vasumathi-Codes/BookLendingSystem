@@ -10,7 +10,9 @@
           <i class="fas fa-book fa-2x text-[#1A237E]"></i>
           <div>
             <p class="text-sm text-gray-500">Total Books</p>
-            <h3 class="text-2xl font-semibold text-[#0E1B4D]">{{ totalBooks }}</h3>
+            <h3 class="text-2xl font-semibold text-[#0E1B4D]">
+                {{ totalBooks }} |  <span class="text-sm">{{ totalCopies }} copies</span>
+            </h3>
           </div>
         </div>
       </div>
@@ -20,7 +22,7 @@
         <div class="flex items-center gap-4">
           <i class="fas fa-check-circle fa-2x text-[#2E7D32]"></i>
           <div>
-            <p class="text-sm text-gray-500">Available Books</p>
+            <p class="text-sm text-gray-500">Available Book Types</p>
             <h3 class="text-2xl font-semibold text-[#2E7D32]">{{ availableBooks }}</h3>
           </div>
         </div>

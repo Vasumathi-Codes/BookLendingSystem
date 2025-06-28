@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 
 export class AdminDashboard implements OnInit {
   totalBooks = 0;
+  totalCopies = 0;
   availableBooks = 0;
   returnedCount = 0;
   notReturnedCount = 0;
@@ -31,8 +32,11 @@ export class AdminDashboard implements OnInit {
   fetchBooks(): void {
     this.bookService.getAllBooks().subscribe(res => {
       const books = res.items;
-      this.totalBooks = res.totalCount;
+      this.totalBooks = books.length; 
+      this.totalCopies = books.reduce((sum, book) => sum + book.totalCopies, 0);
       this.availableBooks = books.filter(b => b.availableCopies > 0).length;
+      console.log('Total book types:', this.totalBooks);
+      console.log('Total copies of all books:', this.totalCopies);
     });
   }
 
