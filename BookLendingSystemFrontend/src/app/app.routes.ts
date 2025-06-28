@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth-guard';
 import { AdminDashboard } from './pages/admindashboard/admindashboard';
 import { UserDashboard } from './pages/userdashboard/userdashboard';
 import { Users } from './pages/users/users';
+import { NotFound } from './pages/not-found/not-found';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -16,6 +17,6 @@ export const routes: Routes = [
     { path: 'admin-dashboard', component: AdminDashboard, canActivate: [AuthGuard] },
     { path: 'user-dashboard', component: UserDashboard, canActivate: [AuthGuard] },
     {path: 'book-detail/:id',loadComponent: () => import('./pages/book-detail/book-detail').then(m => m.BookDetail)},
-    { path: 'users', component: Users},
-    { path: '**', redirectTo: 'login' }
+    { path: 'users', component: Users, canActivate: [AuthGuard] },
+    { path: '**', component: NotFound},
 ];
