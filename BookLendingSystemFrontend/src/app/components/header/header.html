@@ -20,6 +20,15 @@
     >
         Dashboard
     </button>
+
+    <button
+        *ngIf="isAdmin"
+        class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
+        (click)="navigateTo('/users')"
+    >
+        Users
+    </button>
+    
     <button
         class="bg-[#2D3A73] hover:bg-[#3c4d94] px-4 py-2 rounded text-sm font-medium w-full sm:w-auto text-center"
         (click)="navigateTo('/book-list')"

@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class Header implements OnInit {
   role: string = '';
   isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(private router: Router, private roleService: RoleService) {}
 
@@ -19,7 +20,9 @@ export class Header implements OnInit {
     this.roleService.role$.subscribe((role) => {
       this.role = role;
       this.isLoggedIn = !!role;
+      this.isAdmin = this.roleService.isAdmin();
     });
+    
   }
 
   navigateTo(path: string) {
