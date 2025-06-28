@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-[#F0F4FF] p-4 sm:p-6">
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6 border border-[#D9E2FF]">
+    <h2 class="text-2xl font-bold text-[#0E1B4D] mb-6">Borrow History</h2>
+
+    <!-- Filters -->
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <input
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="applyFilters()"
+        placeholder="Search by Book Title"
+        class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+      />
+      <select
+        [(ngModel)]="selectedStatus"
+        (change)="applyFilters()"
+        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+      >
+        <option value="">All Status</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Overdue">Overdue</option>
+        <option value="Returned">Returned</option>
+      </select>
+      <select
+        [(ngModel)]="selectedSort"
+        (change)="applyFilters()"
+        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+      >
+        <option value="">Sort By</option>
+        <option value="borrowDate">Borrow Date</option>
+        <option value="dueDate">Due Date</option>
+        <option value="status">Status</option>
+      </select>
+
+      <select
+        [(ngModel)]="sortOrder"
+        (change)="applyFilters()"
+        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+        >
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+
+      <select
+        [(ngModel)]="pageSize"
+        (change)="changePageSize()"
+        class="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#7BA4FF]"
+      >
+        <option [value]="5">5 / page</option>
+        <option [value]="10">10 / page</option>
+        <option [value]="20">20 / page</option>
+      </select>
+    </div>
+
+    <!-- Record Cards -->
+    <div *ngFor="let record of pagedRecords" class="bg-[#F8FAFF] rounded-xl p-5 mb-4 border border-[#CED4F2] shadow">
+      <div class="flex flex-col sm:flex-row justify-between gap-3">
+        <div>
+          <h3 class="text-xl font-semibold text-[#0E1B4D]">{{ record.bookTitle }}</h3>
+          <p class="text-sm text-gray-600">
+             Borrowed on: {{ record.borrowDate | date:'mediumDate' }}
+          </p>
+          <p class="text-sm text-gray-600">
+            Due by: {{ record.dueDate | date:'mediumDate' }}
+          </p>
+          <p *ngIf="record.returnDate" class="text-sm text-gray-600">
+            Returned on: {{ record.returnDate | date:'mediumDate' }}
+          </p>
+          <p *ngIf="isAdmin" class="text-sm text-gray-600 mt-1">
+            Borrowed by: <strong>{{ record.userName }}</strong>
+          </p>
+        </div>
+
+        <div class="flex flex-col items-end gap-2">
+          <span
+            class="text-xs font-semibold px-3 py-1 rounded-full"
+            [ngClass]="{
+              'bg-yellow-100 text-yellow-700': record.status === 'In Progress',
+              'bg-red-100 text-red-700': record.status === 'Overdue',
+              'bg-green-100 text-green-700': record.status === 'Returned'
+            }"
+          >
+            {{ record.status }}
+          </span>
+
+          <button
+            *ngIf="(record.status === 'In Progress' || record.status === 'Overdue') && !isAdmin"
+            (click)="returnBook(record)"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Return Book
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center gap-4 mt-6">
+      <button
+        (click)="prevPage()"
+        [disabled]="page === 1"
+        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
+      >
+        Previous
+      </button>
+      <span class="text-[#0E1B4D] font-semibold">Page {{ page }} / {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="page === totalPages"
+        class="px-4 py-2 bg-[#0E1B4D] text-white rounded disabled:bg-gray-400"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

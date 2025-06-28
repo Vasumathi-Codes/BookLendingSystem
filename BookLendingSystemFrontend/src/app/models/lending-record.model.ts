@@ -25,3 +25,7 @@ export interface LendingRecordQueryDto {
   page?: number;
   pageSize?: number;
 }
+
+interface LendingRecordWithStatus extends LendingRecordReadDto {
+  status: 'Returned' | 'Overdue' | 'In Progress';
+}
